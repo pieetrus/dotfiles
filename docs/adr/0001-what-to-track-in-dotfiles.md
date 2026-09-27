@@ -25,7 +25,7 @@ secret or machine-specific -> out.
 | `qt` | `qt6ct/qt6ct.conf` | `colors/noctalia.conf` excluded (generated) |
 | `xsettingsd`, `swash` | config files | Small, annoying to recreate |
 | `xdg` | `mimeapps.list`, `user-dirs.dirs` | Default apps, XDG folders |
-| `git` | `~/.gitconfig` | Only points at `gh` as credential helper; no secrets |
+| `git` | `~/.gitconfig` | Points at `gh` as credential helper; `[user]` name/email live in an untracked `~/.gitconfig.local` (included via `[include]`), created manually per machine |
 | — | `dconf.ini` | Text dump of dconf (`make dconf-save`); the binary DB is not tracked |
 | — | `packages/pkglist.txt` | `pacman -Qqe`; `aur.txt` is not kept while there are no foreign packages |
 
@@ -49,5 +49,16 @@ secret or machine-specific -> out.
 
 ## Consequences
 A new machine is bootstrapped with: install packages from the list, `make stow`,
-`make dconf-load`, `gh auth login`, sign in to Firefox Sync.
+`make dconf-load`, `gh auth login`, sign in to Firefox Sync, and creating
+`~/.gitconfig.local` with:
+```
+[user]
+	name = Your Name
+	email = you@example.com
+```
 Adding a new app = new package directory + entry in the `Makefile` and this ADR.
+
+Since this repo is public, commits use GitHub's private noreply email
+(`git config user.email "<id>+<username>@users.noreply.github.com"`, set
+locally per clone via `.git/config`, not tracked) instead of the real address
+in `~/.gitconfig.local`.

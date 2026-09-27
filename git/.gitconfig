@@ -2,8 +2,7 @@
 	helper = 
 	helper = !/usr/bin/gh auth git-credential
 [credential "https://gist.github.com"]
-	helper = 
+	helper =
 	helper = !/usr/bin/gh auth git-credential
-[user]
-	name = Jakub Pietrus
-	email = you@example.com
+[include]
+	path = ~/.gitconfig.local
