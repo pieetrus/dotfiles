@@ -1,4 +1,4 @@
-PACKAGES := alacritty btop fish git gtk hypr kitty micro noctalia nvim qt swash uwsm xdg xsettingsd
+PACKAGES := alacritty btop fish git gtk hypr kitty micro noctalia nvim qt swash tmux uwsm xdg xsettingsd
 
 .PHONY: stow unstow restow dconf-save dconf-load pkg-save
 stow:
