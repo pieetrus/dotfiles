@@ -6,3 +6,5 @@ source /usr/share/cachyos-fish-config/cachyos-config.fish
 #    # smth smth
 #end
 export PATH="$HOME/.local/bin:$PATH"
+
+alias lg='lazygit'
