@@ -7,4 +7,7 @@ source /usr/share/cachyos-fish-config/cachyos-config.fish
 #end
 export PATH="$HOME/.local/bin:$PATH"
 
+zoxide init --cmd cd fish | source
+
 alias lg='lazygit'
+alias cc='claude --model sonnet'
