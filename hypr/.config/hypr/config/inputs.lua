@@ -4,7 +4,10 @@ hl.config({
     input = {
         -- sensitivity = -0.25,
         accel_profile = "flat",
-	kb_layout = "pl"
+	kb_layout = "pl",
+        touchpad = {
+            natural_scroll = true,
+        },
     },
     -- Uncomment the section below to enable software cursors; this can help with cursor display or behavior issues
     -- cursor = {

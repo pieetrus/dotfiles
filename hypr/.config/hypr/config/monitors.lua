@@ -7,16 +7,16 @@
 --     scale     = "1",
 -- })
 
-hl.monitor({
-    output    = MONITOR1,
-    mode      = "preferred",
-    position  = "auto",
-    scale     = "auto",
-})
-
+-- hl.monitor({
+--     output    = MONITOR1,
+--     mode      = "preferred",
+--     position  = "auto",
+--     scale     = "auto",
+-- })
+--
 -- Laptop panel off while the external monitor is used.
 -- To get it back, comment this out (or run: hyprctl keyword monitor eDP-1,preferred,auto,1)
-hl.monitor({
-    output   = MONITOR2,
-    disabled = true,
-})
+-- hl.monitor({
+--     output   = MONITOR2,
+--     disabled = true,
+-- })
