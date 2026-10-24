@@ -7,6 +7,9 @@ export PATH="$HOME/.local/bin:$PATH"
 
 zoxide init --cmd cd fish | source
 
+# fzf key bindings: ctrl+t files, ctrl+r history, alt+c cd
+fzf --fish | source
+
 alias lg='lazygit'
 alias cc='claude --model sonnet --dangerously-skip-permissions'
 alias vim='nvim'
@@ -22,3 +25,6 @@ function fzf_nvim
 end
 bind \cn fzf_nvim
 bind -M insert \cn fzf_nvim
+
+# fzf Ctrl+R: show readable date instead of unix timestamp
+set -gx FZF_CTRL_R_OPTS "--with-nth=1,3.."
