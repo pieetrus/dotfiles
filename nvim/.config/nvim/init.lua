@@ -719,6 +719,7 @@ do
   local ensure_installed = vim.tbl_keys(servers or {})
   vim.list_extend(ensure_installed, {
     -- You can add other tools here that you want Mason to install
+    'netcoredbg', -- .NET debugger (used by nvim-dap / easy-dotnet)
   })
 
   require('mason-tool-installer').setup { ensure_installed = ensure_installed }
@@ -932,6 +933,77 @@ do
       end
     end,
   })
+end
+
+-- ============================================================
+-- SECTION 9.5: DEBUGGING (.NET)
+-- nvim-dap + nvim-dap-ui + easy-dotnet (netcoredbg installed via mason)
+-- Start: open a .cs file, <leader>b to set a breakpoint, <F5>, pick the project
+-- ============================================================
+do
+  vim.pack.add {
+    gh 'nvim-lua/plenary.nvim',
+    gh 'mfussenegger/nvim-dap',
+    gh 'nvim-neotest/nvim-nio',
+    gh 'rcarriga/nvim-dap-ui',
+    gh 'theHamsta/nvim-dap-virtual-text',
+    gh 'GustavEikaas/easy-dotnet.nvim',
+  }
+
+  local dap = require 'dap'
+  local dapui = require 'dapui'
+
+  -- easy-dotnet registers the coreclr adapter/configurations and project picker for <F5>
+  require('easy-dotnet').setup {
+    debugger = {
+      -- 'integratedTerminal' (inside nvim) or 'externalTerminal' (see dap.defaults below)
+      console = 'integratedTerminal',
+    },
+    -- LSP obsługuje własny roslyn_ls (sekcja LSP), więc wyłączamy Roslyna z easy-dotnet,
+    -- żeby nie było dwóch klientów naraz (podwójne K, CodeLens itd.)
+    lsp = { enabled = false },
+  }
+
+  dapui.setup {
+    layouts = {
+      {
+        elements = { 'scopes', 'breakpoints', 'stacks', 'watches' },
+        size = 40,
+        position = 'left',
+      },
+      {
+        elements = { 'repl', 'console' },
+        size = 12,
+        position = 'bottom',
+      },
+    },
+  }
+
+  -- Inline variable values next to the code while debugging
+  require('nvim-dap-virtual-text').setup {}
+
+  -- Open/close the UI together with the debug session
+  dap.listeners.after.event_initialized['dapui_config'] = function() dapui.open() end
+  dap.listeners.before.event_terminated['dapui_config'] = function() dapui.close() end
+  dap.listeners.before.event_exited['dapui_config'] = function() dapui.close() end
+
+  -- Uncomment to run the app in a separate OS terminal (console = 'externalTerminal')
+  -- dap.defaults.fallback.external_terminal = { command = 'kitty', args = { '--hold' } }
+
+  vim.keymap.set('n', '<F5>', dap.continue, { desc = 'Debug: Start/continue' })
+  vim.keymap.set('n', '<F10>', dap.step_over, { desc = 'Debug: Step over' })
+  vim.keymap.set('n', '<F11>', dap.step_into, { desc = 'Debug: Step into' })
+  vim.keymap.set('n', '<F12>', dap.step_out, { desc = 'Debug: Step out' })
+  vim.keymap.set('n', '<leader>b', dap.toggle_breakpoint, { desc = 'Debug: Toggle [B]reakpoint' })
+  vim.keymap.set('n', '<leader>dC', dap.run_to_cursor, { desc = 'Debug: Run to [C]ursor' })
+  vim.keymap.set('n', '<leader>dr', dap.repl.toggle, { desc = 'Debug: Toggle [R]EPL' })
+  vim.keymap.set('n', '<leader>dj', dap.down, { desc = 'Debug: Stack frame down' })
+  vim.keymap.set('n', '<leader>dk', dap.up, { desc = 'Debug: Stack frame up' })
+  vim.keymap.set('n', '<leader>du', dapui.toggle, { desc = 'Debug: Toggle [U]I' })
+  vim.keymap.set('n', '<leader>dq', function()
+    dap.terminate()
+    dap.clear_breakpoints()
+  end, { desc = 'Debug: Terminate and clear breakpoints' })
 end
 
 -- ============================================================
